@@ -5,9 +5,12 @@ import tinytuya
 import itertools
 
 class LightManager:
+    
     def __init__(self, config_path='devices.json'):
         with open(config_path, 'r') as f:
             device_configs = json.load(f)
+            
+        self.first = True
 
         self.devices = [
             tinytuya.BulbDevice(
@@ -23,13 +26,13 @@ class LightManager:
         """Turn on all devices, or a specific device if device_id is provided."""
         for dev in self.devices:
             if device_id is None or dev.id == device_id:
-                dev.turn_on()
+                dev.turn_on(nowait=True)
 
     def turn_off(self, device_id=None):
         """Turn off all devices, or a specific device if device_id is provided."""
         for dev in self.devices:
             if device_id is None or dev.id == device_id:
-                dev.turn_off()
+                dev.turn_off(nowait=True)
 
     def set_color(self, r, g, b, device_id=None):
         """Set RGB color (0-255) for devices."""
@@ -39,9 +42,11 @@ class LightManager:
 
     def set_warm_white(self, brightness=100, color_temp=20, device_id=None):
         """Set white mode with custom brightness and warm color temperature (0-100%)."""
+        
         for dev in self.devices:
             if device_id is None or dev.id == device_id:
-                dev.set_white_percentage(brightness, color_temp)
+                dev.set_white_percentage(brightness, color_temp, nowait=not self.first)
+        self.first = False
 
 
 if __name__ == '__main__':
