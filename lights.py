@@ -45,7 +45,7 @@ class LightManager:
 
 
 if __name__ == '__main__':
-    manager = LightManager('devices.json')
+    manager = LightManager()
 
     # GPIO 4 (BCM numbering)
     # pin.is_active == True  -> OFF
